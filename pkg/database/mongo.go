@@ -67,7 +67,12 @@ func (mc *mongoConnection) Update(slug string, entity interface{}) (interface{},
 	}
 	return entity, nil
 }
-func (mc *mongoConnection) Delete(slug string, entity interface{}) error {
+func (mc *mongoConnection) Delete(slug string) error {
+	filter := bson.M{"slug": slug}
+	_, err := mc.collection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 func (mc *mongoConnection) List(entity interface{}) (interface{}, error) {

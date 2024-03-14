@@ -32,15 +32,18 @@ func (ps *PageService) ReadPage(slug string) (*domains.Page, error) {
 }
 
 func (ps *PageService) UpdatePage(slug string, page *domains.Page) (*domains.Page, error) {
-	pagaUpdated, err := ps.repo.Update(slug, page)
+	pageUpdated, err := ps.repo.Update(slug, page)
 	if err != nil {
 		return nil, err
 	}
-	return pagaUpdated.(*domains.Page), nil
+	return pageUpdated.(*domains.Page), nil
 }
 
 func (ps *PageService) DeletePage(slug string) error {
-	// ps.repo.DeletePage(slug)
+	err := ps.repo.Delete(slug)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

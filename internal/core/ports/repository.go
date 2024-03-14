@@ -4,7 +4,7 @@ type Repository interface {
 	Create(entity interface{}) (string, error)
 	Read(slug string, entity interface{}) (interface{}, error)
 	Update(slug string, entity interface{}) (interface{}, error)
-	Delete(slug string, entity interface{}) error
+	Delete(slug string) error
 	List(entity interface{}) (interface{}, error)
 	ListByTag(tag string, entity interface{}) (interface{}, error)
 	ListByCategory(category string, entity interface{}) (interface{}, error)

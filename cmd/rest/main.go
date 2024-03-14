@@ -35,7 +35,7 @@ func main() {
 		CreatedAt: time.Now().String(),
 		UpdatedAt: time.Now().String(),
 	}
-	page, errs := service.UpdatePage("testado", page)
+	_, errs := service.CreatePage(page)
 	if errs != nil {
 		panic(err)
 	}
@@ -58,6 +58,6 @@ func main() {
 		CreatedAt: time.Now().String(),
 		UpdatedAt: time.Now().String(),
 	}
-	service.CreatePage(page)
+	service.DeletePage("testado")
 	fmt.Println(page)
 }
