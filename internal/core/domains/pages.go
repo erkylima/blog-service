@@ -5,7 +5,6 @@ type Page struct {
 	Title     string `json:"title" bson:"title"`
 	Url       string `json:"url" bson:"url"`
 	Type      string `json:"type" bson:"type"`
-	Id        string `json:"id" bson:"_id"`
 	Tags      []Tag  `json:"tags" bson:"tags"`
 	Body      string `json:"body" bson:"body"`
 	CreatedAt string `json:"created_at" bson:"created_at"`
