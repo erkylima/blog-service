@@ -1,13 +1,13 @@
 package ports
 
 type Repository interface {
-	Create(entity interface{}) (*[]byte, error)
-	Read(slug string, entity interface{}) (*[]byte, error)
-	Update(entity interface{}) (*[]byte, error)
+	Create(entity interface{}) (string, error)
+	Read(slug string, entity interface{}) (interface{}, error)
+	Update(entity interface{}) (interface{}, error)
 	Delete(slug string, entity interface{}) error
-	List(entity interface{}) ([]byte, error)
-	ListByTag(tag string, entity interface{}) ([]byte, error)
-	ListByCategory(category string, entity interface{}) ([]byte, error)
-	ListByAuthor(author string, entity interface{}) ([]byte, error)
-	ListByDate(date string, entity interface{}) ([]byte, error)
+	List(entity interface{}) (interface{}, error)
+	ListByTag(tag string, entity interface{}) (interface{}, error)
+	ListByCategory(category string, entity interface{}) (interface{}, error)
+	ListByAuthor(author string, entity interface{}) (interface{}, error)
+	ListByDate(date string, entity interface{}) (interface{}, error)
 }

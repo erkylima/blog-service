@@ -6,41 +6,49 @@ import (
 )
 
 type CommentService struct {
-	repo ports.CommentRepository
+	repo ports.Repository
 }
 
-func NewCommentService(repo ports.CommentRepository) *CommentService {
+func NewCommentService(repo ports.Repository) *CommentService {
 	return &CommentService{repo: repo}
 }
 
 func (s *CommentService) CreateComment(comment domains.Comment) (*domains.Comment, error) {
-	return s.repo.CreateComment(comment)
+	// return s.repo.Create(comment)
+	return nil, nil
 }
 
 func (s *CommentService) ReadComment(id string) (*domains.Comment, error) {
-	return s.repo.ReadComment(id)
+	// return s.repo.ReadComment(id)
+	return nil, nil
 }
 
 func (s *CommentService) UpdateComment(comment domains.Comment) (*domains.Comment, error) {
-	return s.repo.UpdateComment(comment)
+	// return s.repo.UpdateComment(comment)
+	return nil, nil
 }
 
 func (s *CommentService) DeleteComment(id string) error {
-	return s.repo.DeleteComment(id)
+	// return s.repo.DeleteComment(id)
+	return nil
 }
 
 func (s *CommentService) ListComments() ([]domains.Comment, error) {
-	return s.repo.ListComments()
+	// return s.repo.ListComments()
+	return nil, nil
 }
 
 func (s *CommentService) ListCommentsByPost(postId string) ([]domains.Comment, error) {
-	return s.repo.ListCommentsByPost(postId)
+	// return s.repo.ListCommentsByPost(postId)
+	return nil, nil
 }
 
 func (s *CommentService) ListCommentsByAuthor(author string) ([]domains.Comment, error) {
-	return s.repo.ListCommentsByAuthor(author)
+	// return s.repo.ListCommentsByAuthor(author)
+	return nil, nil
 }
 
 func (s *CommentService) ListCommentsByTag(tag string) ([]domains.Comment, error) {
-	return s.repo.ListCommentsByTag(tag)
+	// return s.repo.ListCommentsByTag(tag)
+	return nil, nil
 }

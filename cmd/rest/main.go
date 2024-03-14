@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/erkylima/posts-service/internal/adapters/repository"
-	"github.com/erkylima/posts-service/internal/core/domains"
+	"fmt"
+
+	"github.com/erkylima/posts-service/internal/core/services"
 	"github.com/erkylima/posts-service/pkg/database"
 )
 
@@ -11,12 +12,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	pageRepository := repository.NewPageRepository()
-	page := &domains.Page{
-		Title: "test",
-		Slug:  "test",
-		Body:  "test",
+	service := services.NewPageService(conn)
+	page, err := service.ReadPage("test")
+	if err != nil {
+		panic(err)
 	}
-	page, _ = pageRepository.Create(page)
-	conn.Push(page)
+	fmt.Println(page)
 }

@@ -6,41 +6,57 @@ import (
 )
 
 type PageService struct {
-	repo ports.PageRepository
+	repo ports.Repository
 }
 
-func NewPageService(repo ports.PageRepository) *PageService {
+func NewPageService(repo ports.Repository) *PageService {
 	return &PageService{repo: repo}
 }
 
-func (ps *PageService) CreatePage(page domains.Page) (domains.Page, error) {
-	return ps.repo.CreatePage(page)
+func (ps *PageService) CreatePage(page *domains.Page) (string, error) {
+	result, err := ps.repo.Create(page)
+	if err != nil {
+		return "", err
+	}
+	return result, nil
 }
 
-func (ps *PageService) ReadPage(slug string) (domains.Page, error) {
-	return ps.repo.ReadPage(slug)
+func (ps *PageService) ReadPage(slug string) (*domains.Page, error) {
+	service := &domains.Page{}
+	page, err := ps.repo.Read(slug, service)
+	if err != nil {
+		return nil, err
+	}
+
+	return page.(*domains.Page), nil
 }
 
-func (ps *PageService) UpdatePage(page domains.Page) (domains.Page, error) {
-	return ps.repo.UpdatePage(page)
+func (ps *PageService) UpdatePage(page domains.Page) (*domains.Page, error) {
+	// ps.repo.UpdatePage(page)
+	return nil, nil
 }
 
 func (ps *PageService) DeletePage(slug string) error {
-	return ps.repo.DeletePage(slug)
+	// ps.repo.DeletePage(slug)
+	return nil
 }
 
 func (ps *PageService) ListPages() ([]domains.Page, error) {
-	return ps.repo.ListPages()
+	// ps.repo.ListPages()
+	return nil, nil
 }
 
 func (ps *PageService) ListPagesByCategory(category string) ([]domains.Page, error) {
-	return ps.repo.ListPagesByCategory(category)
+	// ps.repo.ListPagesByCategory(category)
+	return nil, nil
 }
 
 func (ps *PageService) ListPagesByTag(tag string) ([]domains.Page, error) {
-	return ps.repo.ListPagesByTag(tag)
+	// ps.repo.ListPagesByTag(tag)
+	return nil, nil
 }
 
 func (ps *PageService) ListPagesByAuthor(author string) ([]domains.Page, error) {
-	return ps.repo.ListPagesByAuthor(author)
+	// ps.repo.ListPagesByAuthor(author)
+	return nil, nil
 }

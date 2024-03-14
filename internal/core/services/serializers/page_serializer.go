@@ -13,7 +13,7 @@ func NewPageSerializer() *pageSerializer {
 	return &pageSerializer{}
 }
 
-func (co *pageSerializer) Encode(input domains.Page) ([]byte, error) {
+func (co *pageSerializer) Encode(input interface{}) ([]byte, error) {
 	rawMsg, err := json.Marshal(input)
 	if err != nil {
 		return nil, errors.Wrap(err, "serializer.page.encode")
