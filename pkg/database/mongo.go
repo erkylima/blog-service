@@ -5,88 +5,97 @@ import (
 
 	"github.com/erkylima/posts-service/internal/core/domains"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type mongoConnection struct {
+type mongoConnection[T any] struct {
+	Ctx        context.Context
 	collection *mongo.Collection
 }
 
-func NewMongoConnection(connectionString string) (*mongoConnection, error) {
+func NewMongoConnection[T any](ctx context.Context, connectionString, dbName, collectionName string) (*mongoConnection[T], error) {
 
 	clientOptions := options.Client().ApplyURI(connectionString)
-
 	// Connect to MongoDB
-	client, err := mongo.Connect(context.TODO(), clientOptions)
+	client, err := mongo.Connect(ctx, clientOptions)
 
 	if err != nil {
 		return nil, err
 	}
 
 	// Check the connection
-	if err = client.Ping(context.TODO(), nil); err != nil {
+	if err = client.Ping(ctx, nil); err != nil {
 		return nil, err
 	}
 
-	collection := client.Database("posts_service").Collection("pages")
+	collection := client.Database(dbName).Collection(collectionName)
 
-	return &mongoConnection{
+	return &mongoConnection[T]{
+		Ctx:        ctx,
 		collection: collection,
 	}, nil
 }
 
-func (mc *mongoConnection) Create(entity interface{}) (string, error) {
-	_, err := mc.collection.InsertOne(context.Background(), entity)
+func (mc *mongoConnection[T]) Create(entity *T) (string, error) {
+	result, err := mc.collection.InsertOne(mc.Ctx, entity)
 	if err != nil {
 		return "", err
 	}
-	return "", err
+	return result.InsertedID.(primitive.ObjectID).Hex(), err
 }
-func (mc *mongoConnection) Read(slug string, entity interface{}) (interface{}, error) {
-	result := mc.collection.FindOne(context.Background(), bson.M{"slug": slug})
+func (mc *mongoConnection[T]) Read(slug string, entity *T) error {
+	result := mc.collection.FindOne(mc.Ctx, bson.M{"slug": slug})
 	if err := result.Decode(entity); err != nil {
-		return nil, err
+		return err
 	}
 
-	return entity, nil
+	return nil
 }
-func (mc *mongoConnection) Update(slug string, entity interface{}) (interface{}, error) {
-	pageOld := &domains.Page{}
-	result := mc.collection.FindOne(context.Background(), bson.M{"slug": slug})
-	if err := result.Decode(pageOld); err != nil {
-		return nil, err
+func (mc *mongoConnection[T]) Update(slug string, entity *T) error {
+	var oldEntity T
+	result := mc.collection.FindOne(mc.Ctx, bson.M{"slug": slug})
+	if err := result.Decode(oldEntity); err != nil {
+		return err
 	}
 	filter := bson.M{"slug": slug}
 
-	update := bson.D{{"$set", entity}}
+	update := bson.M{"$set": entity}
 
-	_, err := mc.collection.UpdateOne(context.Background(), filter, update)
-	if err != nil {
-		return nil, err
-	}
-	return entity, nil
-}
-func (mc *mongoConnection) Delete(slug string) error {
-	filter := bson.M{"slug": slug}
-	_, err := mc.collection.DeleteOne(context.Background(), filter)
+	_, err := mc.collection.UpdateOne(mc.Ctx, filter, update)
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func (mc *mongoConnection) List(entity interface{}) (interface{}, error) {
-	return nil, nil
+func (mc *mongoConnection[T]) Delete(slug string) error {
+	filter := bson.M{"slug": slug}
+	_, err := mc.collection.DeleteOne(mc.Ctx, filter)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (mc *mongoConnection) ListByTag(tag string, entity interface{}) (interface{}, error) {
-	return nil, nil
-}
-func (mc *mongoConnection) ListByCategory(category string, entity interface{}) (interface{}, error) {
-	return nil, nil
-}
-func (mc *mongoConnection) ListByAuthor(author string, entity interface{}) (interface{}, error) {
-	return nil, nil
-}
-func (mc *mongoConnection) ListByDate(date string, entity interface{}) (interface{}, error) {
-	return nil, nil
+func (mc *mongoConnection[T]) List(filters []domains.Filter) ([]T, error) {
+	filtersBson := bson.D{}
+
+	// for _, filter := range filters {
+	// 	filtersBson = append(filtersBson, bson.E{Key: filter.Key, Value: filter.Value})
+	// }
+	cursor, err := mc.collection.Find(mc.Ctx, filtersBson)
+	if err != nil {
+		return nil, err
+	}
+	var entities []T
+
+	defer cursor.Close(mc.Ctx)
+	for cursor.Next(mc.Ctx) {
+		var entity T
+		if err := cursor.Decode(&entity); err != nil {
+			return nil, err
+		}
+		entities = append(entities, entity)
+	}
+	return entities, nil
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -10,9 +11,12 @@ import (
 )
 
 func main() {
-	conn, err := database.NewMongoConnection("mongodb://admin:admin@localhost:27017")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	conn, err := database.NewMongoConnection[domains.Page](ctx, "mongodb://admin:admin@localhost:27017", "posts_service", "pages")
 	if err != nil {
-		panic(err)
+		fmt.Printf("%s", err.Error())
 	}
 	service := services.NewPageService(conn)
 	page := &domains.Page{
@@ -37,7 +41,7 @@ func main() {
 	}
 	_, errs := service.CreatePage(page)
 	if errs != nil {
-		panic(err)
+		panic(errs)
 	}
 	page = &domains.Page{
 		Title: "Agora a coisa ficou normal",
@@ -59,5 +63,14 @@ func main() {
 		UpdatedAt: time.Now().String(),
 	}
 	service.DeletePage("testado")
-	fmt.Println(page)
+	list, errP := service.ListPages([]domains.Filter{
+		{
+			Key:   "url",
+			Value: "Tem URL",
+		},
+	})
+	if errP != nil {
+		panic(errP)
+	}
+	fmt.Println(list)
 }

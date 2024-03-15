@@ -6,10 +6,10 @@ import (
 )
 
 type PostService struct {
-	repo ports.Repository
+	repo ports.Repository[domains.Post]
 }
 
-func NewPostService(repo ports.Repository) *PostService {
+func NewPostService(repo ports.Repository[domains.Post]) *PostService {
 	return &PostService{repo: repo}
 }
 

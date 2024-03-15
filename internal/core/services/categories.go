@@ -6,10 +6,10 @@ import (
 )
 
 type CategoryService struct {
-	repo ports.Repository
+	repo ports.Repository[domains.Post]
 }
 
-func NewCategoryRepository(repo ports.Repository) *CategoryService {
+func NewCategoryRepository(repo ports.Repository[domains.Post]) *CategoryService {
 	return &CategoryService{repo: repo}
 }
 

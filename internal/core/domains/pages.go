@@ -1,6 +1,7 @@
 package domains
 
 type Page struct {
+	Id        string `json:"id,omitempty" bson:"_id,omitempty"`
 	Slug      string `json:"slug" bson:"slug"`
 	Title     string `json:"title" bson:"title"`
 	Url       string `json:"url" bson:"url"`

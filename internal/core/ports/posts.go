@@ -7,8 +7,5 @@ type PostService interface {
 	ReadPost(slug string) (*domains.Post, error)
 	UpdatePost(slug string, post *domains.Post) (*domains.Post, error)
 	DeletePost(slug string) error
-	ListPosts() ([]domains.Post, error)
-	ListPostsByCategory(category string) ([]domains.Post, error)
-	ListPostsByTag(tag string) ([]domains.Post, error)
-	ListPostsByAuthor(author string) ([]domains.Post, error)
+	ListPosts(filter []domains.Filter) ([]domains.Post, error)
 }

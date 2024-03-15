@@ -6,10 +6,10 @@ import (
 )
 
 type CommentService struct {
-	repo ports.Repository
+	repo ports.Repository[domains.Post]
 }
 
-func NewCommentService(repo ports.Repository) *CommentService {
+func NewCommentService(repo ports.Repository[domains.Post]) *CommentService {
 	return &CommentService{repo: repo}
 }
 
