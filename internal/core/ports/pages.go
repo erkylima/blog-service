@@ -3,7 +3,7 @@ package ports
 import "github.com/erkylima/posts-service/internal/core/domains"
 
 type PageService interface {
-	CreatePage(page *domains.Page) (*domains.Page, error)
+	CreatePage(page *domains.Page) (string, error)
 	ReadPage(slug string) (*domains.Page, error)
 	UpdatePage(slug string, page *domains.Page) (*domains.Page, error)
 	DeletePage(slug string) error

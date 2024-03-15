@@ -1,6 +1,6 @@
 package domains
 
 type Filter struct {
-	Key   string
-	Value string
+	Key   string `json:"key"`
+	Value string `json:"value"`
 }

@@ -15,8 +15,8 @@ type mongoConnection[T any] struct {
 	collection *mongo.Collection
 }
 
-func NewMongoConnection[T any](ctx context.Context, connectionString, dbName, collectionName string) (*mongoConnection[T], error) {
-
+func NewMongoConnection[T any](connectionString, dbName, collectionName string) (*mongoConnection[T], error) {
+	ctx := context.Background()
 	clientOptions := options.Client().ApplyURI(connectionString)
 	// Connect to MongoDB
 	client, err := mongo.Connect(ctx, clientOptions)
