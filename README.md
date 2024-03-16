@@ -31,6 +31,7 @@ Estrutura do Projeto
     *   `posts/`: Módulo para operações relacionadas aos posts.
     *   `comments/`: Módulo para operações relacionadas aos comentários.
     *   `categories/`: Módulo para operações relacionadas às categorias.
+    *   `shared/`: Módulo para operações compartilhadas entre outros módulos
 *   `pkg/`: Contém pacotes compartilhados entre os módulos.
 *   `docker-compose.yml`: Arquivo para iniciar o MongoDB.
 
